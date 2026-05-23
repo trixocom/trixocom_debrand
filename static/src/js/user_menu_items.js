@@ -3,13 +3,17 @@
 // License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl-3.0.html).
 //
 // Saca el item "My Odoo.com Account" del user menu y registra un item
-// alternativo "documentation" si el admin definió una URL en
+// alternativo "Documentation" si el admin definió una URL en
 // ir.config_parameter trixocom_debrand.brand_documentation_url
-// (expuesto via session_info -> trixocom_debrand.documentation_url).
+// (expuesto via session_info.trixocom_debrand.documentation_url).
 //
-// Referencia (no copia): el comportamiento del user_menu está documentado en
-// addons/web/static/src/webclient/user_menu/user_menu_items.js (rama 19.0)
-// y usa registry.category("user_menuitems").
+// IMPLEMENTACIÓN: registry.remove() puede ejecutarse antes que `web` haga
+// .add("odoo_account", ...), quedando un add posterior que neutraliza el
+// remove. Para evitar la dependencia de orden de carga:
+//   1) Forzamos un add con un item que tiene hide:()=>true, pisando lo que
+//      pudiera haber (force:true sobre la misma key).
+//   2) Adicionalmente, listener al evento UPDATE: si alguien re-registra
+//      "odoo_account" con otro callback, lo volvemos a forzar.
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { session } from "@web/session";
@@ -17,10 +21,30 @@ import { browser } from "@web/core/browser/browser";
 
 const userMenuRegistry = registry.category("user_menuitems");
 
-// Sacar "My Odoo.com Account" — siempre que esté presente.
-if (userMenuRegistry.contains("odoo_account")) {
-    userMenuRegistry.remove("odoo_account");
+function hiddenOdooAccountItem(env) {
+    return {
+        type: "item",
+        id: "odoo_account",
+        description: "",
+        hide: true,
+        callback: () => {},
+        sequence: 60,
+    };
 }
+
+userMenuRegistry.add("odoo_account", hiddenOdooAccountItem, { force: true });
+
+// Defensa contra re-registros posteriores por otros módulos / theme.
+userMenuRegistry.addEventListener("UPDATE", (ev) => {
+    if (!ev.detail || ev.detail.operation !== "add") return;
+    if (ev.detail.key !== "odoo_account") return;
+    // Si el callback agregado no es el nuestro, lo pisamos.
+    const current = userMenuRegistry.content["odoo_account"];
+    if (current && current[1] !== hiddenOdooAccountItem) {
+        userMenuRegistry.add("odoo_account", hiddenOdooAccountItem,
+                             { force: true });
+    }
+});
 
 // Agregar item "Documentation" si hay URL configurada.
 function documentationItem(env) {
@@ -40,4 +64,5 @@ function documentationItem(env) {
     };
 }
 
-userMenuRegistry.add("trixocom_documentation", documentationItem);
+userMenuRegistry.add("trixocom_documentation", documentationItem,
+                     { force: true });
