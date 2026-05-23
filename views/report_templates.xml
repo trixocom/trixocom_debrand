@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2026 Trixocom
+     License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl-3.0.html).
+
+     Reservado para overrides futuros sobre web/views/report_templates.xml
+     (rama 19.0). Auditado: los layouts external_layout_* de Odoo 19 NO incluyen
+     "Powered by Odoo" en el footer del PDF — sólo company.report_footer. Por
+     eso este archivo queda como stub. Si en el futuro Odoo agrega marca en los
+     reports, agregar acá los inherits correspondientes.
+-->
+<odoo>
+</odoo>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2026 Trixocom
+     License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl-3.0.html).
+
+     Reservado para overrides QWeb del user menu si fuera necesario. Por ahora
+     vacío — los cambios se hacen via registry en user_menu_items.js.
+-->
+<templates xml:space="preserve">
+</templates>

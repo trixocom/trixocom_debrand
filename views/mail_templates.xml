@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2026 Trixocom
+     License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl-3.0.html).
+
+     Inherits sobre mail/data/mail_templates_email_layouts.xml (rama 19.0).
+     Verificado contra:
+     https://github.com/odoo/odoo/blob/19.0/addons/mail/data/mail_templates_email_layouts.xml
+     - mail.mail_notification_layout: línea 86, footer "Powered by Odoo"
+     - mail.mail_notification_light:  línea 160, footer "Powered by Odoo"
+-->
+<odoo>
+    <data>
+
+        <template id="mail_notification_layout_debrand"
+                  inherit_id="mail.mail_notification_layout"
+                  name="Trixocom Debrand: Mail Notification Layout">
+            <xpath expr="//a[contains(@href, 'odoo.com') and contains(@href, 'utm_medium=email')]"
+                   position="replace">
+                <t t-set="_tx_name"
+                   t-value="env['ir.config_parameter'].sudo().get_param('trixocom_debrand.brand_name') or 'Trixocom ERP'"/>
+                <t t-set="_tx_url"
+                   t-value="env['ir.config_parameter'].sudo().get_param('trixocom_debrand.brand_url') or 'https://www.trixocom.com'"/>
+                <a target="_blank"
+                   t-att-href="_tx_url"
+                   t-att-style="'color: ' + (company.email_secondary_color or '#875A7B') + ';'"
+                   t-out="_tx_name"/>
+            </xpath>
+        </template>
+
+        <template id="mail_notification_light_debrand"
+                  inherit_id="mail.mail_notification_light"
+                  name="Trixocom Debrand: Mail Notification Light">
+            <xpath expr="//a[contains(@href, 'odoo.com') and contains(@href, 'utm_medium=email')]"
+                   position="replace">
+                <t t-set="_tx_name"
+                   t-value="env['ir.config_parameter'].sudo().get_param('trixocom_debrand.brand_name') or 'Trixocom ERP'"/>
+                <t t-set="_tx_url"
+                   t-value="env['ir.config_parameter'].sudo().get_param('trixocom_debrand.brand_url') or 'https://www.trixocom.com'"/>
+                <a target="_blank"
+                   t-att-href="_tx_url"
+                   t-att-style="'color: ' + (company.email_secondary_color or '#875A7B') + ';'"
+                   t-out="_tx_name"/>
+            </xpath>
+        </template>
+
+    </data>
+</odoo>

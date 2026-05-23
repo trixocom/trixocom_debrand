@@ -1,0 +1,38 @@
+// Copyright 2026 Trixocom
+// License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl-3.0.html).
+//
+// Cuando trixocom_debrand.hide_enterprise=True, el JS agrega la clase
+// o_trixocom_hide_enterprise al <html>. Acá ocultamos los elementos que
+// muestran "Enterprise" en la UI de Odoo Community 19.0.
+//
+// Selectores identificados contra rama 19.0 de odoo/odoo:
+//   addons/web/static/src/webclient/settings_form_view/highlight_text/
+//   form_label_highlight_text.xml → span.o_enterprise_label
+//
+// La intención no es esconder sólo el badge sino TODA la opción
+// (.o_setting_box) que la contiene, porque en Community esos toggles
+// nunca son funcionales — abren el UpgradeDialog. CSS :has() está
+// soportado en Chrome ≥105, Safari ≥15.4 y Firefox ≥121 (lo cual cubre
+// los navegadores soportados por Odoo 19). El JS en debrand_init.js
+// hace un fallback con MutationObserver y limpia blocks vacíos.
+
+.o_trixocom_hide_enterprise {
+
+    // 1) badge solo (defensa por si quedan badges sueltos)
+    .o_enterprise_label {
+        display: none !important;
+    }
+
+    // 2) opción completa: el setting box que contiene el badge
+    .o_setting_box:has(.o_enterprise_label) {
+        display: none !important;
+    }
+
+    // 3) marca aplicada por el JS en blocks/secciones que quedaron
+    //    sin ningún setting visible.
+    .o_setting_box.o_tx_hidden_by_enterprise,
+    .o_settings_container.o_tx_empty_by_enterprise,
+    h2.o_tx_empty_by_enterprise {
+        display: none !important;
+    }
+}

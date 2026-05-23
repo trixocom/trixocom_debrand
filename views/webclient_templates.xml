@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2026 Trixocom
+     License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl-3.0.html).
+
+     XPaths sobre web/views/webclient_templates.xml (rama 19.0). Verificado contra:
+     https://github.com/odoo/odoo/blob/19.0/addons/web/views/webclient_templates.xml
+-->
+<odoo>
+
+    <!--
+        web.layout
+        - <title> hardcodea fallback 'Odoo' → usar brand_name del ir.config_parameter.
+        - favicon: respetar override de companía/parámetro si está seteado.
+    -->
+    <template id="layout_debrand" inherit_id="web.layout" name="Trixocom Debrand: Layout">
+        <xpath expr="//title" position="replace">
+            <!-- Cuando el controller pasa title='Odoo' literal (caso login y
+                 algunos selectors), forzamos el reemplazo por brand_name. Si
+                 trae otro título (ej. 'Sales | Acme'), lo respetamos. -->
+            <t t-set="_tx_brand"
+               t-value="request.env['ir.config_parameter'].sudo().get_param('trixocom_debrand.brand_name') or 'Trixocom ERP'"/>
+            <title t-esc="(title and title != 'Odoo' and title) or _tx_brand"/>
+        </xpath>
+        <xpath expr="//link[@rel='shortcut icon']" position="replace">
+            <t t-set="_tx_favicon" t-value="request.env['ir.config_parameter'].sudo().get_param('trixocom_debrand.favicon_url')"/>
+            <link type="image/x-icon" rel="shortcut icon"
+                  t-att-href="x_icon or _tx_favicon or '/web/static/img/favicon.ico'"/>
+        </xpath>
+    </template>
+
+    <!--
+        web.brand_promotion_message
+        - hardcodea logo a odoo.com + Powered by Odoo → usar brand_name + brand_url.
+    -->
+    <template id="brand_promotion_message_debrand"
+              inherit_id="web.brand_promotion_message"
+              name="Trixocom Debrand: Brand Promotion Message">
+        <xpath expr="//t[@t-set='odoo_logo']" position="replace">
+            <t t-set="_tx_name" t-value="request.env['ir.config_parameter'].sudo().get_param('trixocom_debrand.brand_name') or 'Trixocom ERP'"/>
+            <t t-set="_tx_url" t-value="request.env['ir.config_parameter'].sudo().get_param('trixocom_debrand.brand_url') or 'https://www.trixocom.com'"/>
+            <t t-set="odoo_logo">
+                <a target="_blank"
+                   t-attf-href="#{_tx_url}?utm_source=db&amp;utm_medium=#{_utm_medium}"
+                   class="badge text-bg-light"
+                   t-out="_tx_name"/>
+            </t>
+        </xpath>
+    </template>
+
+</odoo>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2026 Trixocom
+     License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl-3.0.html). -->
+<odoo>
+    <data noupdate="1">
+        <record id="brand_name_param" model="ir.config_parameter">
+            <field name="key">trixocom_debrand.brand_name</field>
+            <field name="value">Trixocom ERP</field>
+        </record>
+        <record id="brand_url_param" model="ir.config_parameter">
+            <field name="key">trixocom_debrand.brand_url</field>
+            <field name="value">https://www.trixocom.com</field>
+        </record>
+        <record id="brand_doc_url_param" model="ir.config_parameter">
+            <field name="key">trixocom_debrand.brand_documentation_url</field>
+            <field name="value">https://www.trixocom.com/documentation</field>
+        </record>
+        <record id="brand_support_url_param" model="ir.config_parameter">
+            <field name="key">trixocom_debrand.brand_support_url</field>
+            <field name="value">https://www.trixocom.com/support</field>
+        </record>
+        <record id="hide_enterprise_param" model="ir.config_parameter">
+            <field name="key">trixocom_debrand.hide_enterprise</field>
+            <field name="value">True</field>
+        </record>
+    </data>
+</odoo>

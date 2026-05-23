@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2026 Trixocom
+     License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl-3.0.html). -->
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.trixocom.debrand</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="Trixocom Debrand"
+                     string="Trixocom Debrand"
+                     name="trixocom_debrand"
+                     groups="base.group_system">
+                    <block title="Branding"
+                           name="trixocom_debrand_branding">
+                        <setting id="trixocom_brand_name_setting"
+                                 string="Brand Name"
+                                 help="Reemplaza referencias a 'Odoo' en backend, mails y reportes.">
+                            <field name="trixocom_brand_name"/>
+                        </setting>
+                        <setting id="trixocom_brand_url_setting"
+                                 string="Brand URL"
+                                 help="URL principal (footer / Powered by).">
+                            <field name="trixocom_brand_url" widget="url"/>
+                        </setting>
+                        <setting id="trixocom_favicon_setting"
+                                 string="Favicon"
+                                 help="URL absoluta o path al favicon. Vacío usa el default.">
+                            <field name="trixocom_favicon_url"/>
+                        </setting>
+                    </block>
+                    <block title="Help &amp; Documentation Links"
+                           name="trixocom_debrand_links">
+                        <setting id="trixocom_doc_url_setting"
+                                 string="Documentation URL"
+                                 help="Vacío oculta el item del menú de usuario.">
+                            <field name="trixocom_documentation_url"
+                                   widget="url"/>
+                        </setting>
+                        <setting id="trixocom_support_url_setting"
+                                 string="Support URL"
+                                 help="Vacío oculta el item del menú de usuario.">
+                            <field name="trixocom_support_url" widget="url"/>
+                        </setting>
+                    </block>
+                    <block title="Enterprise"
+                           name="trixocom_debrand_enterprise">
+                        <setting id="trixocom_hide_enterprise_setting"
+                                 string="Hide Enterprise references"
+                                 help="Oculta banners y módulos Enterprise en Apps / Settings.">
+                            <field name="trixocom_hide_enterprise"/>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
