@@ -7,6 +7,13 @@
      https://github.com/odoo/odoo/blob/19.0/addons/mail/data/mail_templates_email_layouts.xml
      - mail.mail_notification_layout: línea 86, footer "Powered by Odoo"
      - mail.mail_notification_light:  línea 160, footer "Powered by Odoo"
+
+     IMPORTANTE: mail.template renderiza estos layouts con un contexto QWeb que
+     NO incluye 'env' como variable global (a diferencia de los templates HTTP
+     que tienen request.env). Por eso accedemos via 'company.env', porque
+     'company' es un recordset disponible en el contexto del mail layout y
+     todo recordset expone .env. Caso real: KeyError 'env' al renderizar
+     mail.mail_notification_layout_with_responsible_signature desde un POS sync.
 -->
 <odoo>
     <data>
@@ -17,9 +24,9 @@
             <xpath expr="//a[contains(@href, 'odoo.com') and contains(@href, 'utm_medium=email')]"
                    position="replace">
                 <t t-set="_tx_name"
-                   t-value="env['ir.config_parameter'].sudo().get_param('trixocom_debrand.brand_name') or 'Trixocom ERP'"/>
+                   t-value="(company.env['ir.config_parameter'].sudo().get_param('trixocom_debrand.brand_name') if company else None) or 'Trixocom ERP'"/>
                 <t t-set="_tx_url"
-                   t-value="env['ir.config_parameter'].sudo().get_param('trixocom_debrand.brand_url') or 'https://www.trixocom.com'"/>
+                   t-value="(company.env['ir.config_parameter'].sudo().get_param('trixocom_debrand.brand_url') if company else None) or 'https://www.trixocom.com'"/>
                 <a target="_blank"
                    t-att-href="_tx_url"
                    t-att-style="'color: ' + (company.email_secondary_color or '#875A7B') + ';'"
@@ -33,9 +40,9 @@
             <xpath expr="//a[contains(@href, 'odoo.com') and contains(@href, 'utm_medium=email')]"
                    position="replace">
                 <t t-set="_tx_name"
-                   t-value="env['ir.config_parameter'].sudo().get_param('trixocom_debrand.brand_name') or 'Trixocom ERP'"/>
+                   t-value="(company.env['ir.config_parameter'].sudo().get_param('trixocom_debrand.brand_name') if company else None) or 'Trixocom ERP'"/>
                 <t t-set="_tx_url"
-                   t-value="env['ir.config_parameter'].sudo().get_param('trixocom_debrand.brand_url') or 'https://www.trixocom.com'"/>
+                   t-value="(company.env['ir.config_parameter'].sudo().get_param('trixocom_debrand.brand_url') if company else None) or 'https://www.trixocom.com'"/>
                 <a target="_blank"
                    t-att-href="_tx_url"
                    t-att-style="'color: ' + (company.email_secondary_color or '#875A7B') + ';'"
