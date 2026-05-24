@@ -13,8 +13,7 @@
 -->
 <templates xml:space="preserve">
 
-    <t t-name="trixocom_debrand.PosCompanyLogo"
-       t-inherit="point_of_sale.OdooLogo"
+    <t t-inherit="point_of_sale.OdooLogo"
        t-inherit-mode="extension">
         <xpath expr="//svg" position="replace">
             <img class="img-fluid o_tx_pos_company_logo"
