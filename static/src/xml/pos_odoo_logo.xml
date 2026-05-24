@@ -2,25 +2,10 @@
 <!-- Copyright 2026 Trixocom
      License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl-3.0.html).
 
-     Reemplaza el SVG del logo Odoo dentro del POS por el logo de la compañía.
-     URL estándar /web/binary/company_logo apunta a res.company.logo de la
-     compañía actual del usuario. Si el cliente no subió logo, Odoo devuelve un
-     placeholder gris.
-
-     Componente original:
-     addons/point_of_sale/static/src/app/components/odoo_logo/odoo_logo.xml
-     Usado por: customer_display.xml (Powered by [logo]) y otros lugares.
+     ROLLBACK: el inherit con t-inherit sin t-name rompía el render del
+     customer display (pantalla en blanco). Por ahora dejamos el SVG original
+     y atacamos el "logo Odoo" del customer display via CSS (ocultar SVG y
+     mostrar imagen de fondo con company_logo), implementado en pos_debrand.scss.
 -->
 <templates xml:space="preserve">
-
-    <t t-inherit="point_of_sale.OdooLogo"
-       t-inherit-mode="extension">
-        <xpath expr="//svg" position="replace">
-            <img class="img-fluid o_tx_pos_company_logo"
-                 src="/web/binary/company_logo"
-                 alt="Company Logo"
-                 t-attf-style="{{ props.style }}; max-height: 2.2rem; object-fit: contain;"/>
-        </xpath>
-    </t>
-
 </templates>
