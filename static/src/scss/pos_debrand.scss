@@ -1,0 +1,30 @@
+// Copyright 2026 Trixocom
+// License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl-3.0.html).
+//
+// El navbar del POS usa CSS variable --navbar-logo con default
+// url('/web/static/img/odoo_logo.svg'). Lo pisamos con el logo de la
+// compañía actual (res.company.logo) accedido via /web/binary/company_logo.
+//
+// Selector .pos-logo definido en:
+// addons/point_of_sale/static/src/app/components/navbar/navbar.scss
+
+.pos,
+.o_customer_display,
+.o_pos {
+    --navbar-logo: url('/web/binary/company_logo');
+}
+
+// Ajuste del aspect del .pos-logo para que el logo de empresa quede bien
+// proporcionado (algunos logos son cuadrados, otros horizontales).
+.pos .pos-logo {
+    background-size: contain;
+    background-position: left center;
+    background-repeat: no-repeat;
+}
+
+// El logo de empresa en el customer display: imagen del componente
+// PosCompanyLogo (ex OdooLogo) — limitamos altura para que no domine.
+.o_customer_display .o_tx_pos_company_logo {
+    max-height: 2.5rem;
+    width: auto;
+}

@@ -22,7 +22,7 @@ Todo es configurable vía *Settings → General Settings → Trixocom Debrand*:
 El módulo está pensado para Odoo Community 19.0 — no reemplaza requisitos de
 licencia y no remueve atribuciones de copyright del código original.
 """,
-    "version": "19.0.1.7.0",
+    "version": "19.0.2.0.0",
     "category": "Extra Tools",
     "author": "Trixocom",
     "website": "https://www.trixocom.com",
@@ -52,6 +52,15 @@ licencia y no remueve atribuciones de copyright del código original.
         ],
         "web.assets_frontend": [
             "trixocom_debrand/static/src/scss/debrand_frontend.scss",
+        ],
+        # POS standalone (cajero) y customer display comparten point_of_sale.
+        # base_app, así que poner los overrides ahí cubre ambos casos sin
+        # duplicar. customer_display_assets también incluye base_app.
+        "point_of_sale.base_app": [
+            "trixocom_debrand/static/src/scss/pos_debrand.scss",
+            "trixocom_debrand/static/src/js/pos_order_receipt.js",
+            "trixocom_debrand/static/src/xml/pos_odoo_logo.xml",
+            "trixocom_debrand/static/src/xml/pos_order_receipt.xml",
         ],
     },
     "images": [
