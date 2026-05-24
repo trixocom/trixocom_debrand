@@ -2,27 +2,9 @@
 <!-- Copyright 2026 Trixocom
      License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl-3.0.html).
 
-     Reemplaza el footer 'Powered by <b> Odoo </b>' del ticket POS.
-
-     Template original (rama 19.0):
-     addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml
-     línea 147:
-       <div class="pos-receipt-order-data text-center pt-3">
-           <span>Powered by <b> Odoo </b></span>
-       </div>
-
-     Tentativas previas:
-       - position='replace' del div completo NO surte efecto (visto a través
-         del bundle y del ticket renderizado).
-     Aquí probamos XPath quirúrgico al <b> interior + position='replace'
-     y ALSO un position='replace' del span entero como fallback.
+     ROLLBACK: el inherit XML rompía el render del POS completamente.
+     La estrategia ahora es CSS + JS post-render (en pos_debrand.scss y
+     pos_order_receipt.js).
 -->
 <templates id="template" xml:space="preserve">
-
-    <t t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension">
-        <xpath expr="//div[hasclass('pos-receipt-order-data')]/span" position="replace">
-            <span>Powered by <b t-out="trixocomBrand"/></span>
-        </xpath>
-    </t>
-
 </templates>
