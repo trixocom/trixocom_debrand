@@ -15,8 +15,7 @@
 
     <t t-name="trixocom_debrand.PosCompanyLogo"
        t-inherit="point_of_sale.OdooLogo"
-       t-inherit-mode="extension"
-       owl="1">
+       t-inherit-mode="extension">
         <xpath expr="//svg" position="replace">
             <img class="img-fluid o_tx_pos_company_logo"
                  src="/web/binary/company_logo"

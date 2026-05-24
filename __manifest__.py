@@ -22,7 +22,7 @@ Todo es configurable vía *Settings → General Settings → Trixocom Debrand*:
 El módulo está pensado para Odoo Community 19.0 — no reemplaza requisitos de
 licencia y no remueve atribuciones de copyright del código original.
 """,
-    "version": "19.0.2.0.0",
+    "version": "19.0.2.0.1",
     "category": "Extra Tools",
     "author": "Trixocom",
     "website": "https://www.trixocom.com",
