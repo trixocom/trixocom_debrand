@@ -1,30 +1,53 @@
 // Copyright 2026 Trixocom
 // License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl-3.0.html).
 //
-// El navbar del POS usa CSS variable --navbar-logo con default
-// url('/web/static/img/odoo_logo.svg'). Lo pisamos con el logo de la
-// compañía actual (res.company.logo) accedido via /web/binary/company_logo.
+// Approach NO invasivo para reemplazar el logo Odoo del POS por el logo de la
+// empresa. NO tocamos el template OWL del componente point_of_sale.OdooLogo
+// (eso rompía el customer display en v19.0.2.0.2). En su lugar, ocultamos el
+// SVG con un selector específico (viewBox único del logo) y aplicamos el logo
+// de la compañía como background-image al wrapper.
 //
-// Selector .pos-logo definido en:
-// addons/point_of_sale/static/src/app/components/navbar/navbar.scss
+// El componente OdooLogo renderiza:
+//   <div style="..."><svg viewBox="0 0 919 495">...</svg></div>
+// Seleccionamos el SVG por su viewBox (único en Odoo POS) y el div padre via
+// :has() — soportado en Chrome ≥105, Safari ≥15.4, Firefox ≥121, lo cual
+// cubre los navegadores soportados por Odoo 19.
 
+// =====================================================
+// 1) Navbar del POS — usa CSS var --navbar-logo
+// =====================================================
 .pos,
 .o_customer_display,
 .o_pos {
     --navbar-logo: url('/web/binary/company_logo');
 }
 
-// Ajuste del aspect del .pos-logo para que el logo de empresa quede bien
-// proporcionado (algunos logos son cuadrados, otros horizontales).
 .pos .pos-logo {
     background-size: contain;
     background-position: left center;
     background-repeat: no-repeat;
 }
 
-// El logo de empresa en el customer display: imagen del componente
-// PosCompanyLogo (ex OdooLogo) — limitamos altura para que no domine.
-.o_customer_display .o_tx_pos_company_logo {
-    max-height: 2.5rem;
-    width: auto;
+// =====================================================
+// 2) Componente OdooLogo (usado en customer display y otros)
+// =====================================================
+
+// Ocultar el SVG del logo Odoo (identificado por su viewBox único).
+.pos svg[viewBox="0 0 919 495"],
+.o_customer_display svg[viewBox="0 0 919 495"] {
+    visibility: hidden;
+}
+
+// El div padre del SVG (renderizado por el componente OdooLogo) recibe el
+// logo de la empresa como background. Mantenemos el tamaño definido por el
+// style inline de las props (typicamente width: 3rem).
+.pos div:has(> svg[viewBox="0 0 919 495"]),
+.o_customer_display div:has(> svg[viewBox="0 0 919 495"]) {
+    background-image: url('/web/binary/company_logo');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    // El SVG original tiene aspect ratio 919:495 ≈ 1.86. Si el style ya
+    // define width, ajustamos altura proporcional.
+    min-height: 1.6em;
 }
