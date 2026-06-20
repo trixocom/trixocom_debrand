@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        Frontend del sitio web: el boton de apps (grilla, arriba a la izquierda,
+        o_frontend_to_backend_apps_btn) en Odoo 19 estandar abre un menu
+        desplegable con la lista de aplicaciones. Como parte del debrand lo
+        hacemos navegar directamente al home del backend (/odoo), la pantalla
+        con los iconos de las apps, en lugar de desplegar el menu.
+        Cambio aditivo y reversible: solo hereda website.layout, no toca core.
+    -->
+    <template id="frontend_apps_btn_to_home" inherit_id="website.layout"
+              name="Trixocom Debrand: boton apps abre el home de iconos">
+        <xpath expr="//a[hasclass('o_frontend_to_backend_apps_btn')]" position="attributes">
+            <attribute name="href">/odoo</attribute>
+            <attribute name="data-bs-toggle"/>
+        </xpath>
+        <xpath expr="//div[hasclass('o_frontend_to_backend_apps_menu')]" position="replace"/>
+    </template>
+</odoo>

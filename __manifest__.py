@@ -22,7 +22,7 @@ Todo es configurable vía *Settings → General Settings → Trixocom Debrand*:
 El módulo está pensado para Odoo Community 19.0 — no reemplaza requisitos de
 licencia y no remueve atribuciones de copyright del código original.
 """,
-    "version": "19.0.2.1.3",
+    "version": "19.0.2.2.0",
     "category": "Extra Tools",
     "author": "Trixocom",
     "website": "https://www.trixocom.com",
@@ -32,6 +32,7 @@ licencia y no remueve atribuciones de copyright del código original.
         "base_setup",
         "web",
         "mail",
+        "website",
     ],
     "data": [
         "security/ir.model.access.csv",
@@ -41,6 +42,7 @@ licencia y no remueve atribuciones de copyright del código original.
         "views/login_templates.xml",
         "views/mail_templates.xml",
         "views/report_templates.xml",
+        "views/website_templates.xml",
     ],
     "assets": {
         "web.assets_backend": [
