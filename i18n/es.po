@@ -5,9 +5,16 @@
 # Copyright 2026 Trixocom
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl-3.0.html).
 #
-# Se provee es.po (y no es_419.po) a proposito: Odoo busca primero
-# <lang>.po y despues <lang_base>.po, asi que es.po cubre es, es_419,
-# es_AR, es_ES, etc. con un solo archivo.
+# Fallback para es, es_AR, es_ES. La traduccion de referencia es
+# es_419.po, que es el idioma activo en las bases de Trixocom.
+#
+# Formato: Odoo NO acepta un .po escrito a mano sin los comentarios
+# "#. module: <modulo>" y las referencias "#:". Su PoFileReader hace
+# re.match(r"(module[s]?): (\w+)", entry.comment) y revienta con
+# AttributeError: 'NoneType' object has no attribute 'groups' si faltan.
+# Las referencias model_terms:ir.ui.view,arch_db:<xmlid> son las que hacen
+# que el termino se aplique al arch de la vista; sin ellas la entrada se
+# carga como tipo "code" y no traduce el template.
 #
 msgid ""
 msgstr ""
@@ -21,50 +28,91 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#. module: trixocom_debrand
+#: model:ir.model.fields,field_description:trixocom_debrand.field_res_config_settings__trixocom_brand_name
+#: model_terms:ir.ui.view,arch_db:trixocom_debrand.res_config_settings_view_form
 msgid "Brand Name"
 msgstr "Nombre de marca"
 
+#. module: trixocom_debrand
+#: model:ir.model.fields,field_description:trixocom_debrand.field_res_config_settings__trixocom_brand_url
+#: model_terms:ir.ui.view,arch_db:trixocom_debrand.res_config_settings_view_form
 msgid "Brand URL"
 msgstr "URL de marca"
 
+#. module: trixocom_debrand
+#: model_terms:ir.ui.view,arch_db:trixocom_debrand.res_config_settings_view_form
 msgid "Branding"
 msgstr "Marca"
 
+#. module: trixocom_debrand
+#. odoo-javascript
+#: code:addons/trixocom_debrand/static/src/js/user_menu_items.js:0
 msgid "Documentation"
 msgstr "Documentación"
 
+#. module: trixocom_debrand
+#: model:ir.model.fields,field_description:trixocom_debrand.field_res_config_settings__trixocom_documentation_url
+#: model_terms:ir.ui.view,arch_db:trixocom_debrand.res_config_settings_view_form
 msgid "Documentation URL"
 msgstr "URL de documentación"
 
+#. module: trixocom_debrand
+#: model_terms:ir.ui.view,arch_db:trixocom_debrand.res_config_settings_view_form
 msgid "Favicon"
 msgstr "Favicon"
 
+#. module: trixocom_debrand
+#: model:ir.model.fields,field_description:trixocom_debrand.field_res_config_settings__trixocom_favicon_url
 msgid "Favicon URL"
 msgstr "URL del favicon"
 
+#. module: trixocom_debrand
+#: model_terms:ir.ui.view,arch_db:trixocom_debrand.res_config_settings_view_form
 msgid "Help & Documentation Links"
 msgstr "Links de ayuda y documentación"
 
+#. module: trixocom_debrand
+#: model:ir.model.fields,field_description:trixocom_debrand.field_res_config_settings__trixocom_hide_enterprise
+#: model_terms:ir.ui.view,arch_db:trixocom_debrand.res_config_settings_view_form
 msgid "Hide Enterprise references"
 msgstr "Ocultar referencias a Enterprise"
 
+#. module: trixocom_debrand
+#: model_terms:ir.ui.view,arch_db:trixocom_debrand.show_website_info_debrand
 msgid "Information about this instance of"
 msgstr "Información sobre esta instancia de"
 
-msgid "Powered by"
-msgstr "Con la tecnología de"
-
-msgid "Premium feature"
-msgstr "Función premium"
-
-msgid "Support URL"
-msgstr "URL de soporte"
-
-msgid "This feature is part of the premium edition."
-msgstr "Esta función es parte de la edición premium."
-
+#. module: trixocom_debrand
+#. odoo-javascript
+#: code:addons/trixocom_debrand/static/src/xml/upgrade_dialog.xml:0
 msgid "Please contact your administrator for more information."
 msgstr "Contactá a tu administrador para más información."
 
+#. module: trixocom_debrand
+#: model_terms:ir.ui.view,arch_db:trixocom_debrand.login_layout_debrand
+msgid "Powered by"
+msgstr "Con la tecnología de"
+
+#. module: trixocom_debrand
+#. odoo-javascript
+#: code:addons/trixocom_debrand/static/src/xml/upgrade_dialog.xml:0
+msgid "Premium feature"
+msgstr "Función premium"
+
+#. module: trixocom_debrand
+#: model:ir.model.fields,field_description:trixocom_debrand.field_res_config_settings__trixocom_support_url
+#: model_terms:ir.ui.view,arch_db:trixocom_debrand.res_config_settings_view_form
+msgid "Support URL"
+msgstr "URL de soporte"
+
+#. module: trixocom_debrand
+#. odoo-javascript
+#: code:addons/trixocom_debrand/static/src/xml/upgrade_dialog.xml:0
+msgid "This feature is part of the premium edition."
+msgstr "Esta función es parte de la edición premium."
+
+#. module: trixocom_debrand
+#: model_terms:ir.ui.view,arch_db:trixocom_debrand.show_website_info_debrand
 msgid "Version"
 msgstr "Versión"
