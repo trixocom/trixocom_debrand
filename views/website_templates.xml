@@ -58,14 +58,13 @@
               inherit_id="website.show_website_info"
               name="Trixocom Debrand: Website Info">
         <xpath expr="//small[@groups='base.group_no_one']" position="replace">
-            <small groups="base.group_no_one">
-                Version <t t-out="version.get('server_version')"/>
-            </small>
+            <small groups="base.group_no_one">Version <t t-out="version.get('server_version')"/></small>
         </xpath>
         <xpath expr="//a[hasclass('o_translate_inline')]/.." position="replace">
-            <p>
-                Information about the <t t-out="res_company.name"/> instance.
-            </p>
+            <!-- Frase entera antes del t-out para que el msgid sea uno solo
+                 ("Information about this instance of") y no dos fragmentos
+                 sueltos imposibles de traducir con sentido. -->
+            <p>Information about this instance of <t t-out="res_company.name"/>.</p>
         </xpath>
         <xpath expr="//a[contains(@t-att-href, 'odoo.com')]" position="attributes">
             <!-- Sin website propio el <a> queda sin href: QWeb omite el

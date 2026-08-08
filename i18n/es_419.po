@@ -1,0 +1,71 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* trixocom_debrand
+#
+# Copyright 2026 Trixocom
+# License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl-3.0.html).
+#
+# Traduccion es_419 (Espanol / America Latina), que es el idioma activo
+# en las bases de Trixocom. El es.po de al lado es el fallback para el
+# resto de las variantes (es, es_AR, es_ES): Odoo carga <lang>.po y si
+# no existe cae a <lang_base>.po.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: Trixocom\n"
+"Language-Team: Trixocom\n"
+"Language: es_419\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Brand Name"
+msgstr "Nombre de marca"
+
+msgid "Brand URL"
+msgstr "URL de marca"
+
+msgid "Branding"
+msgstr "Marca"
+
+msgid "Documentation"
+msgstr "Documentación"
+
+msgid "Documentation URL"
+msgstr "URL de documentación"
+
+msgid "Favicon"
+msgstr "Favicon"
+
+msgid "Favicon URL"
+msgstr "URL del favicon"
+
+msgid "Help & Documentation Links"
+msgstr "Links de ayuda y documentación"
+
+msgid "Hide Enterprise references"
+msgstr "Ocultar referencias a Enterprise"
+
+msgid "Information about this instance of"
+msgstr "Información sobre esta instancia de"
+
+msgid "Powered by"
+msgstr "Con la tecnología de"
+
+msgid "Premium feature"
+msgstr "Función premium"
+
+msgid "Support URL"
+msgstr "URL de soporte"
+
+msgid "This feature is part of the premium edition."
+msgstr "Esta función es parte de la edición premium."
+
+msgid "Please contact your administrator for more information."
+msgstr "Contactá a tu administrador para más información."
+
+msgid "Version"
+msgstr "Versión"
