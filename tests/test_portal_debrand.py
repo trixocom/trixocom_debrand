@@ -1,11 +1,15 @@
 # -*- coding: utf-8 -*-
 # Copyright 2026 Trixocom
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl-3.0.html).
-"""Tests de los overrides de portal y website.
+"""Tests de los overrides de portal.
 
 Se validan sobre el arch combinado (``get_combined_arch``) y no renderizando,
 porque el render de estos templates necesita un request HTTP real (portal con
-access_token, website con main_object/route).
+access_token).
+
+Los del sitio web viven en trixocom_debrand_website (repo
+trixocom-debrand-apps), que es donde quedaron esos overrides desde la
+19.0.3.0.0.
 """
 from lxml import etree
 
@@ -17,8 +21,6 @@ class TestPortalDebrand(TransactionCase):
 
     def _arch(self, xmlid):
         return self.env.ref(xmlid).get_combined_arch()
-
-    # ---- portal ----
 
     def test_01_portal_sidebar_sin_logo_odoo(self):
         """El 'Powered by <logo odoo>' del sidebar del portal se reemplaza."""
@@ -38,28 +40,23 @@ class TestPortalDebrand(TransactionCase):
             "keys). Si Odoo agrego o saco uno, ajustar "
             "views/portal_templates.xml.")
 
-    # ---- website ----
+    def test_03_no_depende_de_website(self):
+        """El modulo base NO debe depender de website: eso obligaria a
+        instalar el modulo Website completo en clientes que no lo usan.
+        Los overrides del sitio viven en trixocom_debrand_website."""
+        mod = self.env["ir.module.module"].sudo().search([
+            ("name", "=", "trixocom_debrand")], limit=1)
+        deps = mod.dependencies_id.mapped("name")
+        for forbidden in ("website", "sale", "purchase", "website_sale"):
+            self.assertNotIn(
+                forbidden, deps,
+                "trixocom_debrand no puede depender de %s; ese override va en "
+                "un modulo puente auto_install." % forbidden)
 
-    def test_03_brand_promotion_sin_free_website(self):
-        """El footer del sitio no debe ofrecer 'Create a free website'."""
-        arch = self._arch("web.brand_promotion")
-        self.assertNotIn("odoo.com", arch)
-        self.assertNotIn("free website", arch)
-
-    def test_04_website_info_sin_referencias_odoo(self):
-        """/website/info no debe nombrar a Odoo ni linkear a odoo.com."""
-        arch = self._arch("website.website_info")
-        self.assertNotIn("odoo.com", arch)
-        self.assertNotIn("Odoo Version", arch)
-        self.assertNotIn("instance of Odoo", arch)
-
-    # ---- guardas contra cambios de upstream ----
-
-    def test_05_xpaths_siguen_aplicando(self):
+    def test_04_xpaths_siguen_aplicando(self):
         """Si Odoo cambia el fuente y un XPath deja de matchear, el modulo no
-        instala. Este test verifica ademas que los nodos objetivo existan y
-        sean unicos, para detectar el problema en el update y no en runtime.
-        """
+        instala. Este test verifica ademas que los nodos objetivo existan,
+        para detectar el problema en el update y no en runtime."""
         tree = etree.fromstring(self._arch("portal.portal_record_sidebar"))
         anchors = tree.xpath("//a[@t-att-href]")
         self.assertTrue(

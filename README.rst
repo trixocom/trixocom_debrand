@@ -59,17 +59,6 @@ Portal
 * ``portal.portal_my_security`` — link a ``odoo.com/documentation`` de las
   Developer API Keys (visible en modo debug)
 
-Sitio web
----------
-
-* ``website.layout`` — el botón de apps del frontend navega a ``/odoo`` en
-  vez de abrir el dropdown
-* ``website.brand_promotion`` — saca el "Create a free website" con link a
-  ``odoo.com/app/website`` del footer
-* ``website.show_website_info`` — la página ``/website/info`` deja de decir
-  "instance of Odoo, the Open Source ERP", "Odoo Version" y de linkear las
-  localizaciones a ``odoo.com/app/accounting``
-
 Punto de venta
 --------------
 
@@ -79,14 +68,29 @@ Punto de venta
 Fuera de este módulo
 ====================
 
-El modal "Connect with your software" del portal de ventas y de compras vive
-en ``sale`` y ``purchase``, y el mensaje del footer de eCommerce en
-``website_sale``. Debrandearlos desde acá obligaría a ``trixocom_debrand`` a
-depender de esos módulos y forzaría su instalación en clientes que no los
-usan. Están cubiertos por los módulos puente del repo
-`trixocom-debrand-apps <https://github.com/trixocom/trixocom-debrand-apps>`_
-(``trixocom_debrand_sale``, ``trixocom_debrand_purchase``,
-``trixocom_debrand_website_sale``), que se auto-instalan cuando corresponde.
+Este módulo depende sólo de ``base``, ``base_setup``, ``web``, ``mail``,
+``portal`` y ``auth_totp_portal`` — todos presentes en cualquier instancia
+real. **No depende de** ``website``, ``sale``, ``purchase`` ni
+``website_sale``: hacerlo forzaría su instalación en clientes que no los usan.
+
+Los overrides de esos módulos viven en el repo
+`trixocom-debrand-apps <https://github.com/trixocom/trixocom-debrand-apps>`_,
+como módulos puente con ``auto_install``:
+
+* ``trixocom_debrand_website`` — footer del sitio, ``/website/info`` y el
+  botón de apps del frontend
+* ``trixocom_debrand_sale`` / ``trixocom_debrand_purchase`` — modal "Connect
+  with your software" del portal
+* ``trixocom_debrand_website_sale`` — mensaje de eCommerce del footer
+
+Cada uno se instala solo cuando ``trixocom_debrand`` y el módulo
+correspondiente ya están instalados.
+
+Traducciones
+============
+
+Todo string visible viene con ``i18n/es_419.po`` (idioma activo en las bases
+de Trixocom) y ``i18n/es.po`` como fallback de ``es``, ``es_AR`` y ``es_ES``.
 
 Instalación
 ===========
