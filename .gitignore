@@ -1,0 +1,14 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# macOS — Finder mete estos archivos hasta dentro de .git/refs y rompen git
+# ("fatal: bad object refs/Icon?"). Ignorarlos evita commitearlos.
+.DS_Store
+Icon?
+Icon
+
+# Editores
+.idea/
+.vscode/
+*.swp

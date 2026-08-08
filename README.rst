@@ -9,7 +9,8 @@ Trixocom Debrand
 |badge_license|
 
 Reemplaza las referencias a la marca *Odoo* y oculta opciones *Enterprise*
-en el backend, mails, reportes y links de documentación de Odoo Community 19.0.
+en el backend, el portal, el sitio web, mails, reportes y links de
+documentación de Odoo Community 19.0.
 
 Todo es configurable vía **Settings → General Settings → Trixocom Debrand**:
 
@@ -24,11 +25,12 @@ Todo es configurable vía **Settings → General Settings → Trixocom Debrand**
 Puntos cubiertos
 ================
 
+Backend
+-------
+
 * ``web.layout`` — title del browser y favicon
 * ``web.brand_promotion_message`` — logo y URL "Powered by"
 * ``web.login_layout`` — footer "Powered by Odoo" del login
-* ``mail.mail_notification_layout`` / ``mail.mail_notification_light`` —
-  footer "Powered by Odoo" en emails
 * ``web.UpgradeDialog`` — diálogo de upsell Enterprise rebrandeado
 * ``o_enterprise_label`` — badge "Enterprise/Empresa" en formularios de Settings
 * **Settings Enterprise-only** — toda la opción (``.o_setting_box``) se oculta
@@ -40,6 +42,52 @@ Puntos cubiertos
   configurado
 * ``support_url`` en ``session_info`` — pisa el default ``odoo.com/buy``
 
+Mails y reportes
+----------------
+
+* ``mail.mail_notification_layout`` / ``mail.mail_notification_light`` —
+  footer "Powered by Odoo" en emails
+* ``views/report_templates.xml`` — stub. Auditado: los ``external_layout_*``
+  de Odoo 19 no llevan marca Odoo en el footer del PDF, sólo
+  ``company.report_footer``
+
+Portal
+------
+
+* ``portal.portal_record_sidebar`` — el "Powered by |logo odoo|" que aparece
+  abajo del sidebar en ``/my/orders/<id>``, ``/my/invoices/<id>``, etc.
+* ``portal.portal_my_security`` — link a ``odoo.com/documentation`` de las
+  Developer API Keys (visible en modo debug)
+
+Sitio web
+---------
+
+* ``website.layout`` — el botón de apps del frontend navega a ``/odoo`` en
+  vez de abrir el dropdown
+* ``website.brand_promotion`` — saca el "Create a free website" con link a
+  ``odoo.com/app/website`` del footer
+* ``website.show_website_info`` — la página ``/website/info`` deja de decir
+  "instance of Odoo, the Open Source ERP", "Odoo Version" y de linkear las
+  localizaciones a ``odoo.com/app/accounting``
+
+Punto de venta
+--------------
+
+* Logo de la empresa en lugar del de Odoo (cajero y customer display)
+* Ticket de venta sin marca Odoo
+
+Fuera de este módulo
+====================
+
+El modal "Connect with your software" del portal de ventas y de compras vive
+en ``sale`` y ``purchase``, y el mensaje del footer de eCommerce en
+``website_sale``. Debrandearlos desde acá obligaría a ``trixocom_debrand`` a
+depender de esos módulos y forzaría su instalación en clientes que no los
+usan. Están cubiertos por los módulos puente del repo
+`trixocom-debrand-apps <https://github.com/trixocom/trixocom-debrand-apps>`_
+(``trixocom_debrand_sale``, ``trixocom_debrand_purchase``,
+``trixocom_debrand_website_sale``), que se auto-instalan cuando corresponde.
+
 Instalación
 ===========
 
@@ -47,16 +95,16 @@ Instalación
 
     git clone https://github.com/trixocom/trixocom_debrand.git
     # vía odoofly:
-    of repo add https://github.com/trixocom/trixocom_debrand.git --env main --branch 19.0
-    of env init main
-    of env install demo19/main trixocom_debrand
+    of repo add https://github.com/trixocom/trixocom_debrand.git -e main -b main
+    of env init demo19 main
+    of env install demo19 <db> trixocom_debrand
 
 Tests
 =====
 
 ::
 
-    of env update demo19/main trixocom_debrand --test-tags trixocom_debrand
+    of env update demo19 <db> -m trixocom_debrand --test-tags trixocom_debrand
 
 Autor
 =====

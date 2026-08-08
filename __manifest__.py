@@ -10,7 +10,7 @@ Trixocom Debrand
 ================
 
 Reemplaza las referencias a la marca *Odoo* y a opciones *Enterprise* dentro del
-backend, mails, reportes y links de documentación.
+backend, portal, sitio web, mails, reportes y links de documentación.
 
 Todo es configurable vía *Settings → General Settings → Trixocom Debrand*:
 
@@ -19,10 +19,15 @@ Todo es configurable vía *Settings → General Settings → Trixocom Debrand*:
 * Favicon
 * Ocultar referencias a opciones / módulos Enterprise
 
+Los módulos puente ``trixocom_debrand_sale`` y ``trixocom_debrand_purchase``
+(repo trixocom-debrand-apps) extienden el debrand al modal "Connect with your
+software" del portal. Se auto-instalan si el módulo correspondiente está
+instalado.
+
 El módulo está pensado para Odoo Community 19.0 — no reemplaza requisitos de
 licencia y no remueve atribuciones de copyright del código original.
 """,
-    "version": "19.0.2.2.0",
+    "version": "19.0.2.3.0",
     "category": "Extra Tools",
     "author": "Trixocom",
     "website": "https://www.trixocom.com",
@@ -32,6 +37,11 @@ licencia y no remueve atribuciones de copyright del código original.
         "base_setup",
         "web",
         "mail",
+        "portal",
+        # auto_install en core (depends: portal + auth_totp -> web), asi que
+        # ya esta en cualquier base con portal. Se declara explicito porque
+        # views/portal_templates.xml hace XPath sobre un nodo que agrega el.
+        "auth_totp_portal",
         "website",
     ],
     "data": [
@@ -42,6 +52,7 @@ licencia y no remueve atribuciones de copyright del código original.
         "views/login_templates.xml",
         "views/mail_templates.xml",
         "views/report_templates.xml",
+        "views/portal_templates.xml",
         "views/website_templates.xml",
     ],
     "assets": {

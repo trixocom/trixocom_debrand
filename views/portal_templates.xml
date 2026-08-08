@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2026 Trixocom
+     License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl-3.0.html).
+
+     Overrides sobre portal/views/portal_templates.xml (rama 19.0).
+     Verificado contra el fuente de Odoo 19.0 y contra el arch combinado real
+     de una base 19.0 (staging demo19/st_202605062059).
+
+     - portal.portal_record_sidebar (linea 282):
+         Powered by <a href="http://www.odoo.com?utm_source=db&utm_medium=portal"
+                       title="odoo"><img src="/web/static/img/logo.png"
+                       alt="Odoo Logo" height="15"/></a>
+       Es el "Con la tecnologia de odoo" que aparece abajo del sidebar en
+       /my/orders/<id>, /my/invoices/<id>, /my/purchase/<id>, etc.
+
+     - portal.portal_my_security: en el arch combinado hay DOS links a
+       odoo.com/documentation, no uno:
+         1. Two-factor authentication -> .../applications/general/auth/2fa.html
+            (lo agrega auth_totp_portal, que hereda portal.portal_my_security)
+         2. Developer API Keys -> .../developer/reference/external_api.html
+            (viene de portal, solo visible en modo debug)
+       Como el XPath de un inherit matchea SOLO el primer nodo, hacen falta
+       dos xpaths distintos, uno por href.
+
+       auth_totp_portal esta declarado en depends para que el primer xpath
+       tenga el nodo garantizado. No agrega peso real: es auto_install y sus
+       dependencias (portal, auth_totp -> web) ya son dependencias nuestras,
+       asi que en cualquier base con portal ya esta instalado.
+
+     priority=99 para aplicarse despues del inherit de auth_totp_portal.
+-->
+<odoo>
+
+    <template id="portal_record_sidebar_debrand"
+              inherit_id="portal.portal_record_sidebar"
+              name="Trixocom Debrand: Portal Record Sidebar">
+        <!-- Unico link a odoo.com del template: el "Powered by <logo>". -->
+        <xpath expr="//a[contains(@href, 'odoo.com')]" position="replace">
+            <t t-set="_tx_name"
+               t-value="request.env['ir.config_parameter'].sudo().get_param('trixocom_debrand.brand_name') or 'Trixocom ERP'"/>
+            <t t-set="_tx_url"
+               t-value="request.env['ir.config_parameter'].sudo().get_param('trixocom_debrand.brand_url') or 'https://www.trixocom.com'"/>
+            <a target="_blank"
+               t-att-href="_tx_url"
+               t-att-title="_tx_name"
+               t-out="_tx_name"/>
+        </xpath>
+    </template>
+
+    <template id="portal_my_security_debrand"
+              inherit_id="portal.portal_my_security"
+              priority="99"
+              name="Trixocom Debrand: Portal Security Doc Links">
+        <!-- 1. Two-factor authentication (auth_totp_portal) -->
+        <xpath expr="//a[contains(@href, '/applications/general/auth/2fa')]"
+               position="attributes">
+            <attribute name="href"/>
+            <attribute name="t-att-href">request.env['ir.config_parameter'].sudo().get_param('trixocom_debrand.brand_documentation_url') or 'https://www.trixocom.com/documentation'</attribute>
+        </xpath>
+        <!-- 2. Developer API Keys (portal) -->
+        <xpath expr="//a[contains(@href, 'external_api.html')]"
+               position="attributes">
+            <attribute name="href"/>
+            <attribute name="t-att-href">request.env['ir.config_parameter'].sudo().get_param('trixocom_debrand.brand_documentation_url') or 'https://www.trixocom.com/documentation'</attribute>
+        </xpath>
+    </template>
+
+</odoo>
