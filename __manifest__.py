@@ -29,7 +29,7 @@ ni website en clientes que no los usan.
 El módulo está pensado para Odoo Community 19.0 — no reemplaza requisitos de
 licencia y no remueve atribuciones de copyright del código original.
 """,
-    "version": "19.0.3.0.0",
+    "version": "19.0.3.0.1",
     "category": "Extra Tools",
     "author": "Trixocom",
     "website": "https://www.trixocom.com",

@@ -2,33 +2,19 @@
 # This file contains the translation of the following modules:
 # 	* trixocom_debrand
 #
-# Copyright 2026 Trixocom
-# License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl-3.0.html).
-#
-# Traduccion es_419 (Espanol / America Latina), el idioma activo en las
-# bases de Trixocom. El es.po de al lado es el fallback para el resto de
-# las variantes (es, es_AR, es_ES).
-#
-# Formato: Odoo NO acepta un .po escrito a mano sin los comentarios
-# "#. module: <modulo>" y las referencias "#:". Su PoFileReader hace
-# re.match(r"(module[s]?): (\w+)", entry.comment) y revienta con
-# AttributeError: 'NoneType' object has no attribute 'groups' si faltan.
-# Las referencias model_terms:ir.ui.view,arch_db:<xmlid> son las que hacen
-# que el termino se aplique al arch de la vista; sin ellas la entrada se
-# carga como tipo "code" y no traduce el template.
-#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.0\n"
+"Project-Id-Version: Odoo Server 19.0-20260409\n"
 "Report-Msgid-Bugs-To: \n"
-"Last-Translator: Trixocom\n"
-"Language-Team: Trixocom\n"
-"Language: es_419\n"
+"POT-Creation-Date: 2026-08-19 22:06+0000\n"
+"PO-Revision-Date: 2026-08-19 22:06+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
+"Content-Transfer-Encoding: \n"
+"Language: es_419\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
 
 #. module: trixocom_debrand
 #: model:ir.model.fields,field_description:trixocom_debrand.field_res_config_settings__trixocom_brand_name
@@ -48,6 +34,18 @@ msgid "Branding"
 msgstr "Marca"
 
 #. module: trixocom_debrand
+#: model:ir.model,name:trixocom_debrand.model_res_config_settings
+msgid "Config Settings"
+msgstr "Ajustes de configuración"
+
+#. module: trixocom_debrand
+#: model:ir.model.fields,field_description:trixocom_debrand.field_ir_config_parameter__display_name
+#: model:ir.model.fields,field_description:trixocom_debrand.field_ir_http__display_name
+#: model:ir.model.fields,field_description:trixocom_debrand.field_res_config_settings__display_name
+msgid "Display Name"
+msgstr "Nombre en pantalla"
+
+#. module: trixocom_debrand
 #. odoo-javascript
 #: code:addons/trixocom_debrand/static/src/js/user_menu_items.js:0
 msgid "Documentation"
@@ -61,6 +59,11 @@ msgstr "URL de documentación"
 
 #. module: trixocom_debrand
 #: model_terms:ir.ui.view,arch_db:trixocom_debrand.res_config_settings_view_form
+msgid "Enterprise"
+msgstr "Enterprise"
+
+#. module: trixocom_debrand
+#: model_terms:ir.ui.view,arch_db:trixocom_debrand.res_config_settings_view_form
 msgid "Favicon"
 msgstr "Favicon"
 
@@ -68,6 +71,11 @@ msgstr "Favicon"
 #: model:ir.model.fields,field_description:trixocom_debrand.field_res_config_settings__trixocom_favicon_url
 msgid "Favicon URL"
 msgstr "URL del favicon"
+
+#. module: trixocom_debrand
+#: model:ir.model,name:trixocom_debrand.model_ir_http
+msgid "HTTP Routing"
+msgstr "Enrutamiento HTTP"
 
 #. module: trixocom_debrand
 #: model_terms:ir.ui.view,arch_db:trixocom_debrand.res_config_settings_view_form
@@ -79,6 +87,36 @@ msgstr "Links de ayuda y documentación"
 #: model_terms:ir.ui.view,arch_db:trixocom_debrand.res_config_settings_view_form
 msgid "Hide Enterprise references"
 msgstr "Ocultar referencias a Enterprise"
+
+#. module: trixocom_debrand
+#: model:ir.model.fields,field_description:trixocom_debrand.field_ir_config_parameter__id
+#: model:ir.model.fields,field_description:trixocom_debrand.field_ir_http__id
+#: model:ir.model.fields,field_description:trixocom_debrand.field_res_config_settings__id
+msgid "ID"
+msgstr "ID"
+
+#. module: trixocom_debrand
+#: model:ir.model.fields,help:trixocom_debrand.field_res_config_settings__trixocom_brand_name
+msgid ""
+"Nombre de marca que reemplaza a 'Odoo' en el web client, mails y reportes."
+msgstr "Nombre de marca que reemplaza a 'Odoo' en el web client, mails y reportes."
+
+#. module: trixocom_debrand
+#: model_terms:ir.ui.view,arch_db:trixocom_debrand.res_config_settings_view_form
+msgid "Oculta banners y módulos Enterprise en Apps / Settings."
+msgstr "Oculta banners y módulos Enterprise en Apps / Settings."
+
+#. module: trixocom_debrand
+#: model:ir.model.fields,help:trixocom_debrand.field_res_config_settings__trixocom_hide_enterprise
+msgid "Oculta banners y módulos Enterprise en Apps y Settings."
+msgstr "Oculta banners y módulos Enterprise en Apps y Settings."
+
+#. module: trixocom_debrand
+#: model:ir.model.fields,help:trixocom_debrand.field_res_config_settings__trixocom_favicon_url
+msgid ""
+"Path absoluto (p.ej. /trixocom_debrand/static/src/img/favicon.ico) o URL "
+"externa. Vacío usa el favicon por defecto de la compañía."
+msgstr "Path absoluto (p.ej. /trixocom_debrand/static/src/img/favicon.ico) o URL externa. Vacío usa el favicon por defecto de la compañía."
 
 #. module: trixocom_debrand
 #. odoo-javascript
@@ -98,13 +136,58 @@ msgid "Premium feature"
 msgstr "Función premium"
 
 #. module: trixocom_debrand
+#: model_terms:ir.ui.view,arch_db:trixocom_debrand.res_config_settings_view_form
+msgid "Reemplaza referencias a 'Odoo' en backend, mails y reportes."
+msgstr "Reemplaza referencias a 'Odoo' en backend, mails y reportes."
+
+#. module: trixocom_debrand
 #: model:ir.model.fields,field_description:trixocom_debrand.field_res_config_settings__trixocom_support_url
 #: model_terms:ir.ui.view,arch_db:trixocom_debrand.res_config_settings_view_form
 msgid "Support URL"
 msgstr "URL de soporte"
 
 #. module: trixocom_debrand
+#: model:ir.model,name:trixocom_debrand.model_ir_config_parameter
+msgid "System Parameter"
+msgstr "Parámetro del sistema"
+
+#. module: trixocom_debrand
 #. odoo-javascript
 #: code:addons/trixocom_debrand/static/src/xml/upgrade_dialog.xml:0
 msgid "This feature is part of the premium edition."
 msgstr "Esta función es parte de la edición premium."
+
+#. module: trixocom_debrand
+#: model_terms:ir.ui.view,arch_db:trixocom_debrand.res_config_settings_view_form
+msgid "Trixocom Debrand"
+msgstr "Trixocom Debrand"
+
+#. module: trixocom_debrand
+#: model_terms:ir.ui.view,arch_db:trixocom_debrand.res_config_settings_view_form
+msgid "URL absoluta o path al favicon. Vacío usa el default."
+msgstr "URL absoluta o path al favicon. Vacío usa el default."
+
+#. module: trixocom_debrand
+#: model:ir.model.fields,help:trixocom_debrand.field_res_config_settings__trixocom_documentation_url
+msgid "URL de documentación. Vacío para ocultar el item del menú de usuario."
+msgstr "URL de documentación. Vacío para ocultar el item del menú de usuario."
+
+#. module: trixocom_debrand
+#: model:ir.model.fields,help:trixocom_debrand.field_res_config_settings__trixocom_support_url
+msgid "URL de soporte. Vacío para ocultar el item del menú de usuario."
+msgstr "URL de soporte. Vacío para ocultar el item del menú de usuario."
+
+#. module: trixocom_debrand
+#: model_terms:ir.ui.view,arch_db:trixocom_debrand.res_config_settings_view_form
+msgid "URL principal (footer / Powered by)."
+msgstr "URL principal (footer / Powered by)."
+
+#. module: trixocom_debrand
+#: model:ir.model.fields,help:trixocom_debrand.field_res_config_settings__trixocom_brand_url
+msgid "URL principal usada en footers y links 'Powered by'."
+msgstr "URL principal usada en footers y links 'Powered by'."
+
+#. module: trixocom_debrand
+#: model_terms:ir.ui.view,arch_db:trixocom_debrand.res_config_settings_view_form
+msgid "Vacío oculta el item del menú de usuario."
+msgstr "Vacío oculta el item del menú de usuario."
