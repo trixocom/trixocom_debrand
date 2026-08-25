@@ -25,10 +25,11 @@ _logger = logging.getLogger(__name__)
 #: launcher, 512 para el splash / Play Store).
 ICON_SIZES = (192, 512)
 
-#: margen alrededor del logo, en % del lado. El logo suele venir apaisado y sin
-#: aire; centrarlo con margen evita que el recorte circular de Android le coma
-#: los bordes.
-ICON_MARGIN_RATIO = 0.12
+#: margen alrededor del logo, en % del lado: un poco de aire para que el recorte
+#: redondeado de Android no le coma los bordes, sin desperdiciar el cuadrado. Un
+#: logo apaisado igual va a quedar como una franja centrada: para esos casos esta
+#: el parametro "PWA Icon URL", que permite cargar un icono cuadrado propio.
+ICON_MARGIN_RATIO = 0.06
 
 PARAM_PWA_ICON_URL = "trixocom_debrand.pwa_icon_url"
 PARAM_PWA_ICON_BG = "trixocom_debrand.pwa_icon_bg"
