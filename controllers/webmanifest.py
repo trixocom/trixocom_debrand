@@ -81,15 +81,19 @@ class WebManifestDebrand(WebManifest):
     #  Icono generado a partir del logo de la compania
     # ------------------------------------------------------------------ #
     def _debrand_pwa_logo(self):
-        """Logo de la compania en binario, o False."""
+        """Imagen fuente del icono, en binario, o False.
+
+        Primero el icono cuadrado cargado en la compania (Settings -> Trixocom
+        Debrand -> Icono de la app); si no hay, el logo, que al ser apaisado va a
+        quedar como una franja centrada."""
         company = request.env.company.sudo()
         if not company:
             company = request.env["res.company"].sudo().search([], limit=1)
-        logo = company.logo
-        if not logo:
+        fuente = company.pwa_icon or company.logo
+        if not fuente:
             return False
         try:
-            return base64.b64decode(logo)
+            return base64.b64decode(fuente)
         except Exception:  # noqa: BLE001
             return False
 
@@ -114,17 +118,20 @@ class WebManifestDebrand(WebManifest):
         ])
 
     def _debrand_square_png(self, raw, size, background):
-        """Logo centrado sobre un lienzo cuadrado opaco. Cuadrado porque el
+        """Imagen centrada sobre un lienzo cuadrado opaco. Cuadrado porque el
         manifest declara 192x192/512x512 y Android descarta el icono si no
         coincide; opaco porque la transparencia sobre fondo oscuro deja el logo
         invisible."""
         from PIL import Image  # Pillow ya es dependencia de Odoo
 
-        margin = int(size * ICON_MARGIN_RATIO)
-        box = max(size - 2 * margin, 1)
         src = Image.open(io.BytesIO(raw))
         if src.mode != "RGBA":
             src = src.convert("RGBA")
+        # Una imagen ya cuadrada (el icono cargado a mano) se usa a sangre; el
+        # margen es para el logo apaisado, que si no queda pegado a los bordes.
+        es_cuadrada = abs(src.width - src.height) <= 0.05 * max(src.width, 1)
+        margin = 0 if es_cuadrada else int(size * ICON_MARGIN_RATIO)
+        box = max(size - 2 * margin, 1)
         src.thumbnail((box, box), Image.LANCZOS)
         canvas = Image.new("RGBA", (size, size), tuple(background) + (255,))
         canvas.paste(src, ((size - src.width) // 2, (size - src.height) // 2), src)

@@ -63,6 +63,12 @@ class ResConfigSettings(models.TransientModel):
         help="Path absoluto (p.ej. /trixocom_debrand/static/src/img/favicon.ico) "
              "o URL externa. Vacío usa el favicon por defecto de la compañía.",
     )
+    trixocom_pwa_icon = fields.Image(
+        string="Icono de la app (PWA)",
+        related="company_id.pwa_icon", readonly=False,
+        help="Icono cuadrado de la app instalada en el celular, y de sus "
+             "notificaciones. Vacío lo genera con el logo de la compañía.",
+    )
     trixocom_pwa_icon_url = fields.Char(
         string="PWA Icon URL",
         config_parameter=PARAM_PWA_ICON_URL,
