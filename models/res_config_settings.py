@@ -12,6 +12,8 @@ PARAM_DOC_URL = "trixocom_debrand.brand_documentation_url"
 PARAM_SUPPORT_URL = "trixocom_debrand.brand_support_url"
 PARAM_HIDE_ENTERPRISE = "trixocom_debrand.hide_enterprise"
 PARAM_FAVICON_URL = "trixocom_debrand.favicon_url"
+PARAM_PWA_ICON_URL = "trixocom_debrand.pwa_icon_url"
+PARAM_PWA_ICON_BG = "trixocom_debrand.pwa_icon_bg"
 
 DEFAULT_BRAND_NAME = "Trixocom ERP"
 DEFAULT_BRAND_URL = "https://www.trixocom.com"
@@ -61,6 +63,19 @@ class ResConfigSettings(models.TransientModel):
         help="Path absoluto (p.ej. /trixocom_debrand/static/src/img/favicon.ico) "
              "o URL externa. Vacío usa el favicon por defecto de la compañía.",
     )
+    trixocom_pwa_icon_url = fields.Char(
+        string="PWA Icon URL",
+        config_parameter=PARAM_PWA_ICON_URL,
+        help="Icono de la app instalada en el celular (y de sus notificaciones "
+             "push). Vacío genera el icono a partir del logo de la compañía.",
+    )
+    trixocom_pwa_icon_bg = fields.Char(
+        string="PWA Icon Background",
+        config_parameter=PARAM_PWA_ICON_BG,
+        help="Color de fondo del icono generado, en hexadecimal (default "
+             "#FFFFFF). El icono tiene que ser opaco: sobre fondo oscuro un "
+             "logo transparente queda invisible.",
+    )
 
 
 class IrConfigParameter(models.Model):
@@ -78,6 +93,8 @@ class IrConfigParameter(models.Model):
             PARAM_SUPPORT_URL: DEFAULT_SUPPORT_URL,
             PARAM_HIDE_ENTERPRISE: "True",
             PARAM_FAVICON_URL: "",
+            PARAM_PWA_ICON_URL: "",
+            PARAM_PWA_ICON_BG: "#FFFFFF",
         }
         value = self.sudo().get_param(key, defaults.get(key, default))
         return value

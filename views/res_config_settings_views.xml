@@ -30,6 +30,13 @@
                                  help="URL absoluta o path al favicon. Vacío usa el default.">
                             <field name="trixocom_favicon_url"/>
                         </setting>
+                        <setting id="trixocom_pwa_icon_setting"
+                                 string="Icono de la app (PWA)"
+                                 help="Icono de la app instalada en el celular y de sus notificaciones. Vacío lo genera con el logo de la compañía.">
+                            <field name="trixocom_pwa_icon_url"/>
+                            <field name="trixocom_pwa_icon_bg"
+                                   placeholder="#FFFFFF"/>
+                        </setting>
                     </block>
                     <block title="Help &amp; Documentation Links"
                            name="trixocom_debrand_links">
