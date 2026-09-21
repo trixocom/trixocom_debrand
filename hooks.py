@@ -40,12 +40,20 @@ def rename_accounting_menu(env):
         return
     menu = menu.sudo()
     icp = env["ir.config_parameter"].sudo()
-    idiomas = [code for code, _name in env["res.lang"].get_installed()]
-    if not idiomas:
-        return
-    if not icp.get_param(PARAM_ACCOUNTING_MENU_BACKUP):
-        original = {code: menu.with_context(lang=code).name for code in idiomas}
-        icp.set_param(PARAM_ACCOUNTING_MENU_BACKUP, json.dumps(original))
+    # en_US va siempre: es el idioma de origen y el que ve cualquier usuario
+    # cuyo idioma no esté instalado.
+    idiomas = sorted(
+        {code for code, _name in env["res.lang"].get_installed()} | {"en_US"})
+    # El backup guarda el nombre original de cada idioma la primera vez que se
+    # lo ve, sin pisar lo ya guardado.
+    guardado = json.loads(icp.get_param(PARAM_ACCOUNTING_MENU_BACKUP) or "{}")
+    faltantes = {
+        code: menu.with_context(lang=code).name
+        for code in idiomas if code not in guardado
+    }
+    if faltantes:
+        guardado.update(faltantes)
+        icp.set_param(PARAM_ACCOUNTING_MENU_BACKUP, json.dumps(guardado))
     menu.update_field_translations("name", {
         code: NOMBRE_CONTABILIDAD.get(code[:2], "Accounting") for code in idiomas
     })
