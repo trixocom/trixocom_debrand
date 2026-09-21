@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Copyright 2026 Trixocom
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl-3.0.html).
+import json
+
 from odoo import api, fields, models
 
 # Parámetros del sistema (ir.config_parameter) que controlan la marca.
@@ -14,11 +16,23 @@ PARAM_HIDE_ENTERPRISE = "trixocom_debrand.hide_enterprise"
 PARAM_FAVICON_URL = "trixocom_debrand.favicon_url"
 PARAM_PWA_ICON_URL = "trixocom_debrand.pwa_icon_url"
 PARAM_PWA_ICON_BG = "trixocom_debrand.pwa_icon_bg"
+PARAM_RENAME_ACCOUNTING = "trixocom_debrand.rename_accounting_menu"
+PARAM_ACCOUNTING_MENU_BACKUP = "trixocom_debrand.accounting_menu_name_backup"
 
 DEFAULT_BRAND_NAME = "Trixocom ERP"
 DEFAULT_BRAND_URL = "https://www.trixocom.com"
 DEFAULT_DOC_URL = "https://www.trixocom.com/documentation"
 DEFAULT_SUPPORT_URL = "https://www.trixocom.com/support"
+
+# Cómo se dice «Contabilidad» en cada idioma que podamos encontrar.
+# La clave son los dos primeros caracteres del código de idioma.
+NOMBRE_CONTABILIDAD = {
+    "es": "Contabilidad",
+    "pt": "Contabilidade",
+    "it": "Contabilità",
+    "fr": "Comptabilité",
+    "en": "Accounting",
+}
 
 
 class ResConfigSettings(models.TransientModel):
@@ -82,6 +96,56 @@ class ResConfigSettings(models.TransientModel):
              "#FFFFFF). El icono tiene que ser opaco: sobre fondo oscuro un "
              "logo transparente queda invisible.",
     )
+
+    trixocom_rename_accounting_menu = fields.Boolean(
+        string="Llamar «Contabilidad» al menú principal",
+        config_parameter=PARAM_RENAME_ACCOUNTING,
+        default=False,
+        help="En Community el menú de Odoo se llama «Facturación». En los "
+             "clientes que llevan la contabilidad completa conviene que se "
+             "llame «Contabilidad», como espera un contador. Apagarlo "
+             "devuelve el nombre original.",
+    )
+
+    def set_values(self):
+        res = super().set_values()
+        for record in self:
+            record._trixocom_apply_accounting_menu_name()
+        return res
+
+    def _trixocom_apply_accounting_menu_name(self):
+        """Renombra (o restaura) el menú principal de Contabilidad.
+
+        No se declara `account` en los depends a propósito: este módulo se
+        instala también en bases sin contabilidad, y forzarla ahí sería peor
+        que no renombrar nada. Si el menú no existe, no hay nada que hacer.
+        """
+        self.ensure_one()
+        menu = self.env.ref("account.menu_finance", raise_if_not_found=False)
+        if not menu:
+            return
+        menu = menu.sudo()
+        icp = self.env["ir.config_parameter"].sudo()
+        idiomas = [code for code, _name in self.env["res.lang"].get_installed()]
+        if self.trixocom_rename_accounting_menu:
+            if not icp.get_param(PARAM_ACCOUNTING_MENU_BACKUP):
+                original = {
+                    code: menu.with_context(lang=code).name for code in idiomas
+                }
+                icp.set_param(PARAM_ACCOUNTING_MENU_BACKUP, json.dumps(original))
+            menu.update_field_translations("name", {
+                code: NOMBRE_CONTABILIDAD.get(code[:2], "Accounting")
+                for code in idiomas
+            })
+        else:
+            crudo = icp.get_param(PARAM_ACCOUNTING_MENU_BACKUP)
+            if not crudo:
+                return
+            original = json.loads(crudo)
+            menu.update_field_translations("name", {
+                code: original[code] for code in idiomas if code in original
+            })
+            icp.set_param(PARAM_ACCOUNTING_MENU_BACKUP, "")
 
 
 class IrConfigParameter(models.Model):

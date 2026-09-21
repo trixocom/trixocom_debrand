@@ -54,6 +54,14 @@
                             <field name="trixocom_support_url" widget="url"/>
                         </setting>
                     </block>
+                    <block title="Menús"
+                           name="trixocom_debrand_menus">
+                        <setting id="trixocom_rename_accounting_setting"
+                                 string="Llamar «Contabilidad» al menú principal"
+                                 help="Para los clientes que llevan la contabilidad completa. Apagarlo devuelve el nombre original.">
+                            <field name="trixocom_rename_accounting_menu"/>
+                        </setting>
+                    </block>
                     <block title="Enterprise"
                            name="trixocom_debrand_enterprise">
                         <setting id="trixocom_hide_enterprise_setting"
