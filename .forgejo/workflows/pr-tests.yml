@@ -1,0 +1,123 @@
+# Tests + automerge de pull requests (Trixocom).
+#
+# tests:     corre los tests de los modulos del repo en el host de pruebas (of-test-ssh en docker4),
+#            en una base temporal creada con la imagen y el addons_path del entorno de odoofly
+#            indicado en la variable CI_TEST_TARGET (p.ej. nikro/stg). No toca las bases del entorno.
+# automerge: con los tests en verde, el bot (secret AUTOMERGE_TOKEN) mergea el PR y comenta.
+#            Politica (decision de Trixocom, 16/10/2026): la revision es la suite de tests.
+#              - etiqueta "hold"                                  -> nunca se mergea
+#              - etiqueta "automerge" o "[automerge]" en el texto -> se mergea
+#              - AUTOMERGE_POLICY=tests (default) y el autor del PR esta en AUTOMERGE_AUTHORS
+#                (default: hector)                                -> se mergea
+#              - cualquier otro caso                              -> queda para merge manual
+#            Las protecciones de rama siguen mandando: si exigen aprobaciones, el bot no puede mergear.
+#
+# Variables (org o repo): CI_TEST_TARGET, CI_TEST_HOST, CI_TEST_PORT, CI_TEST_USER, CI_TEST_KNOWN_HOSTS,
+#   CI_TEST_MODULES (opcional: lista separada por comas; por defecto todos los modulos instalables del repo,
+#   o el propio repo si tiene el __manifest__.py en la raiz),
+#   AUTOMERGE_POLICY (tests | label), AUTOMERGE_AUTHORS (lista separada por comas).
+# Secrets (org): CI_TEST_SSH_KEY, AUTOMERGE_TOKEN.
+name: pr-tests
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled]
+
+jobs:
+  tests:
+    runs-on: docker
+    timeout-minutes: 45
+    steps:
+      - name: Acceso SSH al host de pruebas
+        run: |
+          set -e
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          printf '%s\n' "${{ secrets.CI_TEST_SSH_KEY }}" > ~/.ssh/id_ed25519 && chmod 600 ~/.ssh/id_ed25519
+          printf '%s\n' "${{ vars.CI_TEST_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+      - name: Tests del repo en el entorno CI_TEST_TARGET
+        env:
+          TARGET: ${{ vars.CI_TEST_TARGET }}
+          HOST: ${{ vars.CI_TEST_HOST }}
+          PORT: ${{ vars.CI_TEST_PORT }}
+          USER_: ${{ vars.CI_TEST_USER }}
+          REPO: ${{ github.event.repository.name }}
+          SHA: ${{ github.event.pull_request.head.sha }}
+          MODULES: ${{ vars.CI_TEST_MODULES }}
+        run: |
+          set -e
+          [ -n "$TARGET" ] || { echo "Falta la variable CI_TEST_TARGET (proyecto/entorno de odoofly donde probar este repo)"; exit 1; }
+          PROJ=${TARGET%%/*}; ENV_=${TARGET##*/}
+          # El host solo acepta "of-test ..." (ForceCommand of-test-ssh): base temporal, se borra al terminar.
+          ssh -o BatchMode=yes -o ServerAliveInterval=30 -p "${PORT:-22}" "$USER_@$HOST" \
+            "of-test '$PROJ' '$ENV_' '$REPO' '$SHA' ${MODULES:+'$MODULES'}"
+
+  automerge:
+    needs: tests
+    runs-on: docker
+    timeout-minutes: 5
+    steps:
+      - name: Merge del PR segun la politica de automerge
+        env:
+          TOKEN: ${{ secrets.AUTOMERGE_TOKEN }}
+          POLICY: ${{ vars.AUTOMERGE_POLICY }}
+          AUTHORS: ${{ vars.AUTOMERGE_AUTHORS }}
+          REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          TARGET: ${{ vars.CI_TEST_TARGET }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_number }}
+        run: |
+          python3 - <<'PY'
+          import json, os, sys, urllib.request
+
+          ev = json.load(open(os.environ["GITHUB_EVENT_PATH"]))
+          pr_ev = ev["pull_request"]
+          labels = {l["name"] for l in pr_ev.get("labels") or []}
+          body = pr_ev.get("body") or ""
+          author = (pr_ev.get("user") or {}).get("login") or ""
+          policy = (os.environ.get("POLICY") or "tests").strip().lower()
+          authors = {a.strip() for a in (os.environ.get("AUTHORS") or "hector").split(",") if a.strip()}
+          if "hold" in labels:
+              print("Etiqueta 'hold': no se mergea."); sys.exit(0)
+          if "automerge" in labels or "[automerge]" in body:
+              motivo = "marcador automerge"
+          elif policy == "tests" and author in authors:
+              motivo = f"politica 'tests' (autor {author})"
+          else:
+              print(f"Sin marcador automerge y el autor '{author}' no esta en AUTOMERGE_AUTHORS (politica {policy}): queda para merge manual."); sys.exit(0)
+          print("Se mergea por:", motivo)
+
+          token = os.environ.get("TOKEN", "")
+          if not token:
+              print("Falta el secret AUTOMERGE_TOKEN"); sys.exit(1)
+          api = os.environ.get("GITHUB_API_URL") or os.environ["GITHUB_SERVER_URL"].rstrip("/") + "/api/v1"
+          repo, pr, head_sha = os.environ["REPO"], os.environ["PR"], os.environ["HEAD_SHA"]
+
+          def call(method, path, data=None):
+              req = urllib.request.Request(api + path, method=method,
+                    data=json.dumps(data).encode() if data is not None else None,
+                    headers={"Authorization": "token " + token, "Content-Type": "application/json", "Accept": "application/json"})
+              try:
+                  with urllib.request.urlopen(req, timeout=60) as r:
+                      return r.status, (json.loads(r.read() or b"null"))
+              except urllib.error.HTTPError as e:
+                  return e.code, e.read().decode(errors="replace")
+
+          st, pr_now = call("GET", f"/repos/{repo}/pulls/{pr}")
+          if st != 200:
+              print("No pude leer el PR:", st, pr_now); sys.exit(1)
+          if pr_now.get("state") != "open" or pr_now.get("merged"):
+              print("El PR ya no esta abierto; nada que hacer."); sys.exit(0)
+          if pr_now["head"]["sha"] != head_sha:
+              print(f"El PR recibio commits nuevos ({pr_now['head']['sha'][:7]}) despues de los tests ({head_sha[:7]}): no se mergea; el run nuevo decidira."); sys.exit(0)
+          if pr_now.get("mergeable") is False:
+              print("Forgejo marca el PR como no mergeable (conflictos con la rama base)."); sys.exit(1)
+
+          st, out = call("POST", f"/repos/{repo}/pulls/{pr}/merge",
+                         {"Do": "merge", "delete_branch_after_merge": False})
+          if st not in (200, 201):
+              print("Merge rechazado:", st, out); sys.exit(1)
+          msg = (f"Mergeado automaticamente: tests OK en {os.environ.get('TARGET') or 'el host de pruebas'} "
+                 f"para {head_sha[:7]} ({os.environ.get('RUN_URL')}).")
+          call("POST", f"/repos/{repo}/issues/{pr}/comments", {"body": msg})
+          print(msg)
+          PY
