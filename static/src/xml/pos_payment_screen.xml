@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2026 Trixocom
+     License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl-3.0.html).
+
+     Boton de facturar de la pantalla de cobro del POS
+     (point_of_sale.PaymentScreenButtons, boton .js_invoice).
+
+     En Odoo 19 el texto es "Invoice" y la traduccion es_419 del core lo
+     muestra como "Recibo/Factura", que no dice lo que hace: tildado emite
+     la factura electronica en AFIP; destildado sale solo el ticket. Para
+     companias argentinas el texto pasa a "Factura AFIP". Para el resto se
+     deja "Invoice" (con su traduccion del core), sin cambios.
+
+     Se reemplaza solo el <t t-if> del texto; el <t t-else> ("Not available",
+     sin diario de facturas) queda igual y sigue siendo su hermano inmediato.
+
+     IMPORTANTE: este template va en point_of_sale._assets_pos (POS cajero),
+     NO en point_of_sale.base_app. base_app tambien lo incluye el customer
+     display, que no tiene PaymentScreenButtons; heredar ahi un template que
+     no existe en el bundle deja el customer display en blanco (ver el
+     ROLLBACK de pos_odoo_logo.xml).
+-->
+<templates xml:space="preserve">
+    <t t-name="trixocom_debrand.PaymentScreenButtons"
+       t-inherit="point_of_sale.PaymentScreenButtons"
+       t-inherit-mode="extension">
+        <xpath expr="//button[hasclass('js_invoice')]//t[@t-if='pos.config.canInvoice']"
+               position="replace">
+            <t t-if="pos.config.canInvoice">
+                <t t-if="pos.company.country_id?.code == 'AR'">Factura AFIP</t>
+                <t t-else="">Invoice</t>
+            </t>
+        </xpath>
+    </t>
+</templates>

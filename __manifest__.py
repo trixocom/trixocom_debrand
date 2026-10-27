@@ -29,7 +29,7 @@ ni website en clientes que no los usan.
 El módulo está pensado para Odoo Community 19.0 — no reemplaza requisitos de
 licencia y no remueve atribuciones de copyright del código original.
 """,
-    "version": "19.0.5.0.0",
+    "version": "19.0.5.1.0",
     "category": "Extra Tools",
     "author": "Trixocom",
     "website": "https://www.trixocom.com",
@@ -74,6 +74,11 @@ licencia y no remueve atribuciones de copyright del código original.
             "trixocom_debrand/static/src/js/pos_order_receipt.js",
             "trixocom_debrand/static/src/xml/pos_odoo_logo.xml",
             "trixocom_debrand/static/src/xml/pos_order_receipt.xml",
+        ],
+        # Solo POS cajero (no customer display): hereda PaymentScreenButtons,
+        # que no existe en customer_display_assets.
+        "point_of_sale._assets_pos": [
+            "trixocom_debrand/static/src/xml/pos_payment_screen.xml",
         ],
     },
     "images": [

@@ -64,6 +64,8 @@ Punto de venta
 
 * Logo de la empresa en lugar del de Odoo (cajero y customer display)
 * Ticket de venta sin marca Odoo
+* Boton de facturar de la pantalla de cobro: "Factura AFIP" en lugar de
+  "Recibo/Factura" en companias argentinas (solo POS cajero)
 
 Fuera de este módulo
 ====================
