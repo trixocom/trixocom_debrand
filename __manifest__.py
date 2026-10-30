@@ -29,7 +29,7 @@ ni website en clientes que no los usan.
 El módulo está pensado para Odoo Community 19.0 — no reemplaza requisitos de
 licencia y no remueve atribuciones de copyright del código original.
 """,
-    "version": "19.0.5.1.0",
+    "version": "19.0.5.2.0",
     "category": "Extra Tools",
     "author": "Trixocom",
     "website": "https://www.trixocom.com",
@@ -79,6 +79,7 @@ licencia y no remueve atribuciones de copyright del código original.
         # que no existe en customer_display_assets.
         "point_of_sale._assets_pos": [
             "trixocom_debrand/static/src/xml/pos_payment_screen.xml",
+            "trixocom_debrand/static/src/js/pos_company_logo.js",
         ],
     },
     "images": [

@@ -19,7 +19,9 @@
 .pos,
 .o_customer_display,
 .o_pos {
-    --navbar-logo: url('/web/binary/company_logo');
+    // El POS (pos_company_logo.js) define --trx-company-logo con la URL de la
+    // empresa de la caja; company_logo queda de respaldo (customer display).
+    --navbar-logo: var(--trx-company-logo, url('/web/binary/company_logo'));
 }
 
 .pos .pos-logo {
